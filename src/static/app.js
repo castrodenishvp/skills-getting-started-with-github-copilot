@@ -22,10 +22,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
-          <p>${details.description}</p>
+          <p class="activity-description">${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <h5>Participants</h5>
+            <div class="participants-container"></div>
+          </div>
         `;
+
+        // Populate participants list into the .participants-container
+        const participantsContainer = activityCard.querySelector(".participants-container");
+        if (Array.isArray(details.participants) && details.participants.length > 0) {
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+          details.participants.forEach((p) => {
+            const li = document.createElement("li");
+            // If participant has a name property use it, otherwise show the email/string
+            li.textContent = typeof p === "object" && p.name ? p.name : String(p);
+            ul.appendChild(li);
+          });
+          participantsContainer.appendChild(ul);
+        } else {
+          const empty = document.createElement("p");
+          empty.className = "no-participants";
+          empty.textContent = "No participants yet. Be the first to sign up!";
+          participantsContainer.appendChild(empty);
+        }
 
         activitiesList.appendChild(activityCard);
 
